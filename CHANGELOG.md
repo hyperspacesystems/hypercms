@@ -74,6 +74,11 @@
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-11-06
+
+### Changed
+- The CMS now opens with `cms.open()`. The floating toggle button is removed.
+
 ## [0.12.0] - 2026-10-30
 
 ### Added
