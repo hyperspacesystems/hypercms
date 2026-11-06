@@ -13,7 +13,6 @@ import {
   cms,
 } from '../src/hypercms.js'
 import { state, pendingWork, quiesceSession, resumeSession } from '../src/session.js'
-import { injectToggle } from '../src/toggle.js'
 
 const PAGE =
   '<!DOCTYPE html><html><head>' +
@@ -282,44 +281,6 @@ test('standalone: the shell\u0027s close button still closes directly', () => {
   open({ pageRoot: dom.window.document.body })
   dom.window.document.querySelector('[data-hcms-action="close"]').click()
   assert.equal(isOpen(), false)
-  dom.window.close()
-})
-
-test('toggle: managed page in view asks ClayJS for edit, then opens the CMS', async () => {
-  const gate = admission(false)
-  const calls = []
-  const cmsCalls = []
-  const dom = setupDom({ lifecycle: gate.lifecycle })
-  dom.window.clay.mode = 'view'
-  dom.window.clay.setMode = (mode) => { calls.push(mode); return Promise.resolve({ ok: true, mode: 'edit', changed: true }) }
-  let openState = false
-  const host = injectToggle({
-    open: () => cmsCalls.push('open'),
-    close: () => cmsCalls.push('close'),
-    isOpen: () => openState,
-  }, dom.window.document)
-
-  host.click()
-  await new Promise((r) => setTimeout(r, 0))
-  assert.deepEqual(calls, ['edit'])
-  assert.deepEqual(cmsCalls, ['open'], 'the switch committed, so the CMS opens')
-
-  openState = true
-  host.click()
-  await new Promise((r) => setTimeout(r, 0))
-  assert.deepEqual(calls, ['edit', 'view'])
-  assert.deepEqual(cmsCalls, ['open'], 'leaving is the mode switch, not a direct close')
-  dom.window.close()
-})
-
-test('toggle: managed page without setMode falls back to open(), which admission still refuses', async () => {
-  const gate = admission(false)
-  const dom = setupDom({ lifecycle: gate.lifecycle })
-  const host = injectToggle({ open, close, isOpen }, dom.window.document)
-  host.click()
-  await new Promise((r) => setTimeout(r, 0))
-  assert.equal(isOpen(), false)
-  close()
   dom.window.close()
 })
 

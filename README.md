@@ -105,9 +105,9 @@ A page declares which editor it opens in, on its rules tag:
 ```
 
 `inline` edits text where it sits on the page and opens small popovers for everything else.
-`sidebar` (also what you get with no attribute) opens the form in a side panel. The floating
-toggle opens and closes whichever view the page declares; it does not switch between them.
-`cms.open({ view: 'inline' })` still overrides the declaration for one session.
+`sidebar` (also what you get with no attribute) opens the form in a side panel. `cms.open()`
+opens whichever view the page declares, and `cms.open({ view: 'inline' })` overrides the
+declaration for one session.
 
 ## Field controls
 
@@ -458,40 +458,13 @@ Common errors thrown by the engine:
 
 In hyperclayjs apps, drag works out of the box (hypercms's object-array templates carry the `[sortable]` custom-attribute, which hyperclayjs upgrades). For standalone use, install `sortablejs` and either upgrade the `[sortable]` attribute yourself or replace the template with your own reorder UX. Add/remove still work without sortable.
 
-## The floating toggle
+## Opening the CMS
 
-On a page that has a cms rules tag, hypercms injects a floating "Edit content"
-button in the bottom-right corner: in edit mode, and on a ClayJS page whenever
-ClayJS lets the visitor edit (in view too), where pressing it switches to edit
-and then opens the CMS. It is runtime-only chrome: it
-carries `no-save`, `snapshot-remove` and `save-ignore`, so it never reaches the
-saved file and never marks the page dirty.
+Hypercms adds no button of its own. Call `cms.open()` from a control on your page:
 
-It takes the page's font, ink and letterforms by inheritance. The pill's surface
-is opaque and neutral, picked between two values by whichever reads better
-against the page's own ink, because the button floats over a backdrop it cannot
-see and a translucent surface is unreadable on a dark hero or footer.
+    <button onclick="hypercms.cms.open()">Edit</button>
 
-Restyle it with plain CSS. Our cosmetic rules are selected by
-`[data-hcms-toggle-host]`, so any `#hcms-toggle { ... }` rule of yours outranks
-them:
-
-    #hcms-toggle .hcms-toggle__main { border-radius: 6px; box-shadow: none; }
-
-Five properties are not reachable that way. `position`, `right`, `bottom`,
-`z-index` and `background` are pinned inline with `!important`, so that a host
-page's `* { ... !important }` reset cannot leave the button unpositioned or
-transparent. `position` is always `fixed`. The other four read a custom
-property first, and that is how you change them:
-
-| property | default | what it does |
-|---|---|---|
-| `--hcms-toggle-color` | the page's ink | label and focus ring; a plain `#hcms-toggle` rule reaches these too |
-| `--hcms-toggle-bg` | the picked surface | the pill's surface; setting it turns off the automatic pick |
-| `--hcms-toggle-offset` | `16px` | distance from the corner; it adds to the sidebar shift rather than replacing it |
-| `--hcms-toggle-z` | `2147482900` | raise it if a chat widget or cookie banner covers the button |
-
-    :root { --hcms-toggle-offset: 76px; }   /* clear a chat widget */
+On a ClayJS page, `?plugins=cms` brings ClayJS's menu, which offers "Open the CMS" to anyone who can edit, when `cms.hasRules()` says the page declares rules. Add `exclude=menu` and open it yourself if you do not want the menu.
 
 ## Build, develop, test
 

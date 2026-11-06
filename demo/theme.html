@@ -64,6 +64,7 @@
 </script>
 </head>
 <body>
+<p><button type="button" onclick="hypercms.cms.open()">open</button></p>
 
 <div class="hero">
   <h1>A page that dresses itself</h1>
@@ -91,8 +92,8 @@
 </section>
 
 <!-- hypercms needs a mutation hub; clayjs is the one the platform ships. edit
-     mode is forced so the toggle and the edit-only paths are live on a fixture
-     with no owner cookie. -->
+     mode is forced so the edit-only paths are live on a fixture with no owner
+     cookie. -->
 <script>window.clayEditMode = true</script>
 <script src="/clayjs/public/v1/clay.js?plugins=sortable,undo"></script>
 <script src="/hypercms/dist/hypercms.min.js"></script>

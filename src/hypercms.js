@@ -27,7 +27,6 @@ import {
   resumeSession,
 } from './session.js'
 import { findLeafField, writeFieldValue } from './events.js'
-import { maybeInjectToggle } from './toggle.js'
 import { platform, onPlatformEvent, MUTATION_READY } from './platform.js'
 import { installHooks } from './hooks.js'
 
@@ -407,15 +406,6 @@ function whenReady(fn) {
 // Auto-open at module load (browser only — node tests import this without a real
 // window, and the guards above no-op there).
 maybeAutoOpen()
-
-// Floating edit-mode toggle at module load (same browser-only no-op in node).
-maybeInjectToggle({
-  open,
-  close,
-  isOpen,
-  getTheme: () => state.opts?.theme,
-  hasRules: (doc) => !!engine.findRules(doc, 'cms'),
-})
 
 const cms = {
   open,

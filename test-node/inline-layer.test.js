@@ -539,8 +539,7 @@ test('inline layer: a window without requestAnimationFrame places synchronously 
   const win = dom.window
   const doc = win.document
   const io = stubIntersection(win)
-  // The degradation toggle.js already applies in scheduleSurface. A non-visual
-  // jsdom has no rAF, and an unguarded schedule() threw out of mount().
+  // A non-visual jsdom has no rAF, and an unguarded schedule() threw out of mount().
   delete win.requestAnimationFrame
   delete win.cancelAnimationFrame
 

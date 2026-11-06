@@ -2,7 +2,6 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { loadPage, reset } from './_helpers.js'
 import { open, close, isOpen, currentView, refresh, api } from '../src/hypercms.js'
-import { injectToggle } from '../src/toggle.js'
 
 // There is no drawer (§3.1.1). A ruled field with no visual representation is
 // counted in the session bar and reached through one tap out to the sidebar,
@@ -150,28 +149,5 @@ test('session class: hcms-session-open is set for both views and dropped on clos
   open({ view: 'inline' })
   assert.equal(doc.body.classList.contains('hcms-open'), false, 'an inline session shifts nothing')
   close()
-  reset(dom)
-})
-
-test('toggle: the main button closes an inline session', async () => {
-  if (isOpen()) close()
-  const dom = loadPage(VISIBLE_ONLY)
-  const doc = dom.window.document
-  setBox(doc.querySelector('.title'), 300, 40)
-  const host = injectToggle({ open, close, isOpen }, doc)
-
-  open({ view: 'inline' })
-  assert.equal(
-    host.getAttribute('data-hcms-session'),
-    'open',
-    'the label follows the session, and an inline session sets no body class to read'
-  )
-  assert.equal(doc.body.classList.contains('hcms-open'), false)
-
-  host.querySelector('.hcms-toggle__main').click()
-  await new Promise((r) => setTimeout(r, 0))
-  assert.equal(currentView(), null, 'the button closed whichever view was up')
-  assert.equal(isOpen(), false)
-  assert.equal(host.hasAttribute('data-hcms-session'), false)
   reset(dom)
 })

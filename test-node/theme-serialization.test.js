@@ -108,7 +108,6 @@ test('a themed page saves with its theme intact and no editor chrome', () => {
     '[data-hcms-form-root]',
     'hypercms-inline',
     'link[data-hcms-font-preview]',
-    '#hcms-toggle',
     '.hcms-color-panel',
   ]) {
     assert.equal(out.querySelector(selector), null, `no editor chrome: ${selector}`)

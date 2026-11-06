@@ -93,9 +93,8 @@ export function createInlineLayer({ doc, layerEl, onActivate, onListAction, onSt
 
   function schedule() {
     if (frame || !win) return
-    // The same degradation toggle.js applies in scheduleSurface: a window with
-    // no requestAnimationFrame gets a synchronous pass instead of a crash on
-    // mount. Every browser has it; a non-visual jsdom does not.
+    // A window with no requestAnimationFrame gets a synchronous pass instead of
+    // a crash on mount. Every browser has it; a non-visual jsdom does not.
     if (typeof win.requestAnimationFrame !== 'function') return placeAll()
     frame = win.requestAnimationFrame(() => {
       frame = 0
