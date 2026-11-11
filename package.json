@@ -1,6 +1,6 @@
 {
   "name": "@panphora/hyper-cms",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Live edit-in-place CMS sidebar for HTML pages with a hyper-html-api rules tag",
   "keywords": [
     "HTML",
@@ -49,7 +49,7 @@
     "test:all": "npm run test:node && npm run test:browser"
   },
   "dependencies": {
-    "hyper-html-api": "^0.13.0",
+    "hyper-html-api": "^0.14.0",
     "hyper-morph": "^1.7.0"
   },
   "devDependencies": {
