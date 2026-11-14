@@ -74,6 +74,12 @@
 
 ## [Unreleased]
 
+## [0.13.3] - 2026-11-14
+
+### Fixed
+- An add that is refused removes its row from the list again.
+- Editing another item in the same list still saves after a refused add.
+
 ## [0.13.2] - 2026-11-13
 
 ### Changed
