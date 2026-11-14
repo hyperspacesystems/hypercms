@@ -67,3 +67,41 @@ test('mountTo nested under pageRoot still preserves shell on structural error', 
     dom.window.close()
   }
 })
+
+test('a refused list add leaves no form row behind, so later edits still save', () => {
+  if (isOpen()) close()
+  // An empty list and no cms-template seed: the engine has nothing to clone, so
+  // growing the list fails with EmptyListInsert.
+  const dom = loadPage(`<!DOCTYPE html><html><body>
+    <script data-rules-name="cms" data-rules-version="1" type="application/json">
+    { "title": "h1.title", "products": [".product", { "name": ".n" }] }
+    </script>
+    <div id="page">
+      <h1 class="title">Old</h1>
+      <div></div>
+    </div>
+    <aside id="shell-mount" save-ignore></aside>
+  </body></html>`)
+  const mount = document.getElementById('shell-mount')
+  open({ mountTo: mount })
+  try {
+    let lastErr = null
+    document.body.addEventListener('hcms:error', (e) => { lastErr = e.detail.error })
+    api.addItem('products')
+    assert.ok(lastErr, 'the refused add reported an error')
+
+    // The refused row must not linger in the form: every later commit would
+    // re-extract it and fail the same way.
+    const formRoot = mount.querySelector('[data-hcms-form-root]')
+    assert.equal(formRoot.querySelectorAll('[data-hcms-card]').length, 0, 'no leftover item row for the refused add')
+
+    api.setValue('title', 'New')
+    assert.equal(document.querySelector('h1.title').textContent, 'New', 'the later edit reached the page')
+    const result = api._commit()
+    assert.equal(result.ok, true, 'the later commit succeeded')
+    assert.equal(document.querySelector('h1.title').textContent, 'New')
+  } finally {
+    close()
+    dom.window.close()
+  }
+})

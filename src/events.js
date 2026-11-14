@@ -508,9 +508,16 @@ export function onAdd(arrayPath, ctx) {
   slot.appendChild(itemNode)
   enhanceFields(itemNode, ctx.doc, ctx.view?.enhanceFormRichText !== false)
   updateArrayButtonsVisibility(arrayEl)
-  return commitWithUndo(`Add ${arrayPath}`, () =>
+  const result = commitWithUndo(`Add ${arrayPath}`, () =>
     commit(extractFormData(ctx), { path: arrayPath, structural: true }, ctx)
   )
+  // A grow the page refused leaves no form row behind: every later commit would
+  // read it again and fail the same way. The error message stays up.
+  if (result && result.ok === false) {
+    itemNode.remove()
+    updateArrayButtonsVisibility(arrayEl)
+  }
+  return result
 }
 
 export function onMove(itemEl, direction, ctx) {
