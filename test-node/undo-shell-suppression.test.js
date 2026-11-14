@@ -79,7 +79,9 @@ test('a real page edit while the CMS is open is still recorded and reversible', 
     open()
     scope.clear()
     document.querySelector('h1.t').textContent = 'Changed' // real page content, outside the shell
-    await new Promise((r) => setTimeout(r, 40))
+    // The idle commit fires 20 ms after the edit, later on a busy machine: wait for it, then assert.
+    const deadline = Date.now() + 2000
+    while (!scope.canUndo && Date.now() < deadline) await new Promise((r) => setTimeout(r, 20))
     assert.equal(scope.canUndo, true, 'real page edits are still recorded (suppression is scoped)')
     scope.undo()
     assert.equal(document.querySelector('h1.t').textContent, 'Hello', 'undo reverts the real edit')
