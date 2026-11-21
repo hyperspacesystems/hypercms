@@ -74,6 +74,11 @@
 
 ## [Unreleased]
 
+## [0.13.4] - 2026-11-20
+
+### Changed
+- No user-facing changes.
+
 ## [0.13.3] - 2026-11-14
 
 ### Fixed
