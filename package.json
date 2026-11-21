@@ -49,7 +49,7 @@
     "test:all": "npm run test:node && npm run test:browser"
   },
   "dependencies": {
-    "hyper-html-api": "^0.16.0",
+    "hyper-html-api": "^0.17.0",
     "hyper-morph": "^1.7.0"
   },
   "devDependencies": {
